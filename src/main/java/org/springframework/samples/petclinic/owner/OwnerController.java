@@ -163,14 +163,19 @@ class OwnerController {
 	 * @param ownerId the ID of the owner to display
 	 * @return a ModelMap with the model attributes for the view
 	 */
-	@GetMapping("/owners/{ownerId}")
+	@GetMapping("/owners/{ownerId}") // <-- ADDED "/owners" HERE!
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
-		Optional<Owner> optionalOwner = this.owners.findById(ownerId);
-		Owner owner = optionalOwner.orElseThrow(() -> new IllegalArgumentException(
-				"Owner not found with id: " + ownerId + ". Please ensure the ID is correct "));
+
+		// ADDED .get() here to fix the Optional error!
+		Owner owner = this.owners.findById(ownerId).get();
+
+		// --- SIMULATED BUG FOR AI ---
+		Owner dummyOwner = null;
+		System.out.println(dummyOwner.getLastName()); // This will trigger the NullPointerException!
+		// ----------------------------
+
 		mav.addObject(owner);
 		return mav;
 	}
-
 }

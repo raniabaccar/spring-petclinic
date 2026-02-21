@@ -16,6 +16,8 @@
 
 package org.springframework.samples.petclinic;
 
+import java.util.Collections;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportRuntimeHints;
@@ -30,7 +32,12 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 public class PetClinicApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PetClinicApplication.class, args);
+		SpringApplication app = new SpringApplication(PetClinicApplication.class);
+		// To fix the port conflict, we programmatically set a different default port.
+		// In a real application, it's often preferred to configure this via application.properties/yml,
+		// environment variables, or command-line arguments for flexibility.
+		app.setDefaultProperties(Collections.singletonMap("server.port", "8081"));
+		app.run(args);
 	}
 
 }
