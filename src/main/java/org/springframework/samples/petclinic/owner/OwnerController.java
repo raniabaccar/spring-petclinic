@@ -170,10 +170,9 @@ class OwnerController {
 		Owner owner = optionalOwner.orElseThrow(() -> new IllegalArgumentException(
 			"Owner not found with id: " + ownerId + ". Please ensure the ID is correct "));
 
-		// --- SIMULATED BUG FOR AI TO FIX ---
-		Owner dummyOwner = null;
-		System.out.println(dummyOwner.getLastName()); // BOOM! NullPointerException!
-		// -----------------------------------
+		// The simulated bug causing a NullPointerException has been removed.
+		// Owner dummyOwner = null;
+		// System.out.println(dummyOwner.getLastName()); // BOOM! NullPointerException!
 
 		mav.addObject(owner);
 		return mav;
