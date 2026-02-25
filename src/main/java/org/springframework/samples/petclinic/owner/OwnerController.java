@@ -61,6 +61,12 @@ class OwnerController {
 		dataBinder.setDisallowedFields("id");
 	}
 
+	/**
+	 * Called before every request handling method. If 'ownerId' is present in the path
+	 * variables, it fetches the owner from the database. If not found, it throws an
+	 * IllegalArgumentException. If 'ownerId' is not present (e.g., for creating a new
+	 * owner), it returns a new Owner object.
+	 */
 	@ModelAttribute("owner")
 	public Owner findOwner(@PathVariable(name = "ownerId", required = false) Integer ownerId) {
 		return ownerId == null ? new Owner()
@@ -146,34 +152,34 @@ class OwnerController {
 			return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 		}
 
+		// Since 'id' is disallowed, owner.getId() is populated by the @ModelAttribute
+		// findOwner method.
+		// This check ensures consistency with the path variable.
 		if (!Objects.equals(owner.getId(), ownerId)) {
 			result.rejectValue("id", "mismatch", "The owner ID in the form does not match the URL.");
 			redirectAttributes.addFlashAttribute("error", "Owner ID mismatch. Please try again.");
 			return "redirect:/owners/{ownerId}/edit";
 		}
 
-		owner.setId(ownerId);
+		owner.setId(ownerId); // Ensure the correct ID from the path variable is used for
+								// saving
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "Owner Values Updated");
 		return "redirect:/owners/{ownerId}";
 	}
 
 	/**
-	 * Custom handler for displaying an owner.
-	 * @param ownerId the ID of the owner to display
+	 * Custom handler for displaying an owner. Leverages the @ModelAttribute("owner")
+	 * findOwner method to resolve the owner based on ownerId. If the owner is not found,
+	 * findOwner will throw an IllegalArgumentException before this method is invoked.
+	 * @param owner the Owner object, resolved by the @ModelAttribute findOwner method
 	 * @return a ModelMap with the model attributes for the view
 	 */
 	@GetMapping("/owners/{ownerId}")
-	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
+	public ModelAndView showOwner(@ModelAttribute("owner") Owner owner) {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
-		Optional<Owner> optionalOwner = this.owners.findById(ownerId);
-		Owner owner = optionalOwner.orElseThrow(() -> new IllegalArgumentException(
-				"Owner not found with id: " + ownerId + ". Please ensure the ID is correct "));
-
-		// The simulated bug causing a NullPointerException has been removed.
-		// Owner dummyOwner = null;
-		// System.out.println(dummyOwner.getLastName()); // BOOM! NullPointerException!
-
+		// The 'owner' object is already resolved by the @ModelAttribute findOwner method
+		// and is guaranteed to be present and valid if this method is reached.
 		mav.addObject(owner);
 		return mav;
 	}
