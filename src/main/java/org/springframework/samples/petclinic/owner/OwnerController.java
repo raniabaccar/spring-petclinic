@@ -75,9 +75,14 @@ class OwnerController {
 							+ ". Please ensure the ID is correct " + "and the owner exists in the database."));
 	}
 
+	/**
+	 * Handles GET requests for creating a new owner. Sets up the model for the owner
+	 * creation form.
+	 * @return The name of the view for the owner creation form.
+	 */
 	@GetMapping("/owners/new")
 	public String initCreationForm() {
-		return "owners/brokenPage"; // <--- We replaced the constant with a bad page name!
+		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
 	@PostMapping("/owners/new")
