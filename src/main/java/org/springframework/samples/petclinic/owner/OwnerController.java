@@ -82,9 +82,7 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/new")
 	public String initCreationForm() {
-		// Corrected the return view name to the proper owner creation/update form.
-		// The Javadoc comment accurately describes the method's intended functionality.
-		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		return "owners/brokenPage";
 	}
 
 	@PostMapping("/owners/new")
