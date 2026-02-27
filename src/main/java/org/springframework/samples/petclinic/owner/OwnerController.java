@@ -82,7 +82,7 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/new")
 	public String initCreationForm() {
-		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		return "owners/brokenPage";
 	}
 
 	@PostMapping("/owners/new")
