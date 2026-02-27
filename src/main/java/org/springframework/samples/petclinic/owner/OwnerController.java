@@ -82,8 +82,7 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/new")
 	public String initCreationForm() {
-		// This method sets up the model with a new Owner object for the creation form.
-		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		return "owners/brokenPage"; // <--- We replaced the constant with a bad page name!
 	}
 
 	@PostMapping("/owners/new")
