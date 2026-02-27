@@ -82,7 +82,7 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/new")
 	public String initCreationForm() {
-		// Returns the designated view for the owner creation/update form.
+		// This method sets up the model with a new Owner object for the creation form.
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
