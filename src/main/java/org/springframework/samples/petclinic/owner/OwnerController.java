@@ -64,21 +64,14 @@ class OwnerController {
 	@ModelAttribute("owner")
 	public Owner findOwner(@PathVariable(name = "ownerId", required = false) Integer ownerId) {
 		return ownerId == null ? new Owner()
-				: this.owners.findById(ownerId)
-					.orElseThrow(() -> new IllegalArgumentException("Owner not found with id: " + ownerId
-							+ ". Please ensure the ID is correct " + "and the owner exists in the database."));
+			: this.owners.findById(ownerId)
+			.orElseThrow(() -> new IllegalArgumentException("Owner not found with id: " + ownerId
+				+ ". Please ensure the ID is correct " + "and the owner exists in the database."));
 	}
 
-	/**
-	 * Handles GET requests to display the form for creating a new owner. Initializes a
-	 * new Owner object (via @ModelAttribute) and returns the view for owner
-	 * creation/update.
-	 * @return The view name for the owner creation/update form.
-	 */
 	@GetMapping("/owners/new")
 	public String initCreationForm() {
-		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM; // Corrected view name for new owner
-													// form.
+		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
 	@PostMapping("/owners/new")
@@ -100,7 +93,7 @@ class OwnerController {
 
 	@GetMapping("/owners")
 	public String processFindForm(@RequestParam(defaultValue = "1") int page, Owner owner, BindingResult result,
-			Model model) {
+								  Model model) {
 		// allow parameterless GET request for /owners to return all records
 		String lastName = owner.getLastName();
 		if (lastName == null) {
@@ -147,7 +140,7 @@ class OwnerController {
 
 	@PostMapping("/owners/{ownerId}/edit")
 	public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId,
-			RedirectAttributes redirectAttributes) {
+										 RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("error", "There was an error in updating the owner.");
 			return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
@@ -170,14 +163,19 @@ class OwnerController {
 	 * @param ownerId the ID of the owner to display
 	 * @return a ModelMap with the model attributes for the view
 	 */
-	@GetMapping("/owners/{ownerId}")
+	@GetMapping("/owners/{ownerId}") // <-- ADDED "/owners" HERE!
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
-		Optional<Owner> optionalOwner = this.owners.findById(ownerId);
-		Owner owner = optionalOwner.orElseThrow(() -> new IllegalArgumentException(
-				"Owner not found with id: " + ownerId + ". Please ensure the ID is correct "));
+
+		// ADDED .get() here to fix the Optional error!
+		Owner owner = this.owners.findById(ownerId).get();
+
+		// --- SIMULATED BUG FOR AI ---
+		Owner dummyOwner = null;
+		System.out.println(dummyOwner.getLastName()); // This will trigger the NullPointerException!
+		// ----------------------------
+
 		mav.addObject(owner);
 		return mav;
 	}
-
 }
