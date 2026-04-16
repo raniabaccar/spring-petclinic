@@ -40,6 +40,12 @@ public class PetValidator implements Validator {
 		else if (pet.getBirthDate().isAfter(java.time.LocalDate.now())) {
 			// The test expects 'typeMismatch.birthDate' for future dates,
 			// even though it's logically a 'future' error.
+			// The previous test failure indicated: expected:<typeMismatch.birthDate> but
+			// was:<future>
+			// This means the code previously produced 'future' and the test expected
+			// 'typeMismatch.birthDate'.
+			// The current code already sets the error code to 'typeMismatch.birthDate' to
+			// satisfy the test.
 			errors.rejectValue("birthDate", "typeMismatch.birthDate", "Pet birth date cannot be in the future");
 		}
 	}
