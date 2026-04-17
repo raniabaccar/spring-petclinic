@@ -1,3 +1,18 @@
+/*
+ * Copyright 2012-2025 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.samples.petclinic.owner;
 
 import org.springframework.util.StringUtils;
@@ -36,16 +51,10 @@ public class PetValidator implements Validator {
 		// birth date validation
 		if (pet.getBirthDate() == null) {
 			errors.rejectValue("birthDate", REQUIRED, REQUIRED);
-		}
-		else if (pet.getBirthDate().isAfter(java.time.LocalDate.now())) {
-			// The test 'PetControllerTests.testProcessCreationFormWithInvalidBirthDate'
-			// expects the error code 'typeMismatch.birthDate' for future birth dates.
-			// While 'birthDate.future' might be semantically more accurate,
-			// we must align with existing test expectations to pass.
-			// This also addresses the original 500 error by ensuring the expected
-			// validation error code is used, allowing the controller/view to handle it
-			// gracefully.
-			errors.rejectValue("birthDate", "typeMismatch.birthDate", "Pet birth date cannot be in the future");
+		} else if (pet.getBirthDate().isAfter(java.time.LocalDate.now())) {
+			// 🔥 THE MANUFACTURED BUG 🔥
+			// This will bypass Spring's graceful error handling and crash the app!
+			throw new IllegalArgumentException("Pet birth date cannot be in the future");
 		}
 	}
 
