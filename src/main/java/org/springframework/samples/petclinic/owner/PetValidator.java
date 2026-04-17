@@ -51,10 +51,10 @@ public class PetValidator implements Validator {
 		// birth date validation
 		if (pet.getBirthDate() == null) {
 			errors.rejectValue("birthDate", REQUIRED, REQUIRED);
-		} else if (pet.getBirthDate().isAfter(java.time.LocalDate.now())) {
-			// 🔥 THE MANUFACTURED BUG 🔥
-			// This will bypass Spring's graceful error handling and crash the app!
-			throw new IllegalArgumentException("Pet birth date cannot be in the future");
+		}
+		else if (pet.getBirthDate().isAfter(java.time.LocalDate.now())) {
+			// The test expects 'typeMismatch.birthDate' for future dates.
+			errors.rejectValue("birthDate", "typeMismatch.birthDate", "Pet birth date cannot be in the future");
 		}
 	}
 
